@@ -1,0 +1,67 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<groupId>com.himalaya</groupId>
+	<artifactId>himalayaSpringBoot</artifactId>
+	<packaging>pom</packaging>
+	<version>1.0-SNAPSHOT</version>
+	<name>Himalaya Spring Boot Demo Maven Webapp</name>
+	
+	<url>http://maven.apache.org</url> 
+  
+	<modules>
+		<!--module>himalaya-solr-demo</module-->
+	</modules>
+
+	<properties>
+		<spring.boot.version>1.4.5.RELEASE</spring.boot.version>
+	</properties>
+	
+	<repositories>
+		<repository>
+			<id>local-file</id>
+			<url>file://${basedir}/lib/</url>
+			<layout>default</layout>
+		</repository>
+	</repositories>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>${spring.boot.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			
+			<dependency>
+			    <groupId>org.mybatis.spring.boot</groupId>
+			    <artifactId>mybatis-spring-boot-starter</artifactId>
+			    <version>${mybatis.spring.boot.starter}</version>
+			    <scope>import</scope>
+			</dependency>			
+		</dependencies>
+	</dependencyManagement>
+	
+	<build>
+		<finalName>springboot</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<encoding>UTF-8</encoding>
+					<source>1.8</source>
+					<target>1.8</target>
+					<showWarnings>true</showWarnings>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+</project>

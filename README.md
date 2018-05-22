@@ -1,0 +1,2 @@
+# himalayaSolr
+solr demo

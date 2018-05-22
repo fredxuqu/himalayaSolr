@@ -3,15 +3,15 @@
 	<modelVersion>4.0.0</modelVersion>
 	
 	<groupId>com.himalaya</groupId>
-	<artifactId>himalayaSpringBoot</artifactId>
+	<artifactId>himalayaSolrDemo</artifactId>
 	<packaging>pom</packaging>
 	<version>1.0-SNAPSHOT</version>
-	<name>Himalaya Spring Boot Demo Maven Webapp</name>
+	<name>Himalaya Solr Demo Maven Webapp</name>
 	
 	<url>http://maven.apache.org</url> 
   
 	<modules>
-		<!--module>himalaya-solr-demo</module-->
+		<module>himalaya-solr-demo</module>
 	</modules>
 
 	<properties>

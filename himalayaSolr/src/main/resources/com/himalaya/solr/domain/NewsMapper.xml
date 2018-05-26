@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.himalaya.solr.repository.HimalayaNewsDao">
+
+	<resultMap id="BaseResultMap" type="com.himalaya.solr.domain.NewsDO" >
+        <id column="ID" property="id" jdbcType="INTEGER" />
+        <result column="TITLE" property="title" jdbcType="VARCHAR" />
+        <result column="CONTENT" property="content" jdbcType="VARCHAR" />
+        <result column="AUTHOR" property="author" jdbcType="VARCHAR"/>
+        <result column="TYPE" property="type" jdbcType="INTEGER" />
+        <result column="PUBLISH_TIME" property="publishTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    
+    <sql id="Base_Column_List" >
+        ID, TITLE, CONTENT, AUTHOR, TYPE, PUBLISH_TIME
+    </sql>
+
+    <select id="getAll" resultMap="BaseResultMap"  >
+       SELECT 
+       <include refid="Base_Column_List" />
+	   FROM TB_NEWS
+    </select>
+
+    <select id="getById" parameterType="java.lang.Integer" resultMap="BaseResultMap" >
+       SELECT 
+       <include refid="Base_Column_List" />
+	     FROM TB_NEWS
+	    WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="NewsDO" >
+       INSERT INTO TB_NEWS
+       		(<include refid="Base_Column_List" />) 
+       	VALUES
+       		(#{id}, #{title}, #{content}, #{author}, #{type}, #{publishTime})
+    </insert>
+    
+    <update id="update" parameterType="NewsDO" >
+       UPDATE 
+       		TB_NEWS 
+       SET 
+       	<if test="title != null">TITLE = #{title},</if>
+       	<if test="content != null">CONTENT = #{content},</if>
+       	<if test="author != null">AUTHOR = #{author},</if>
+       	<if test="type != null">TYPE = #{type},</if>
+       	PUBLISH_TIME = #{publishTime}
+       WHERE id = #{id}
+    </update>
+    
+    <delete id="delete" parameterType="java.lang.Integer" >
+       DELETE FROM
+       		 TB_NEWS 
+       WHERE 
+       		 id =#{id}
+    </delete>
+    
+</mapper>

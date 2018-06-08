@@ -19,6 +19,6 @@ public class LuceneApplication {
 	
 	public static void main(String[] args) {
 		SpringApplication.run(LuceneApplication.class, args);
-		LOGGER.info("LuceneApplication is running...");
+		LOGGER.info("Lucene Application is running...");
 	}
 }

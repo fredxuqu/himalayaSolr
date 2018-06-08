@@ -14,13 +14,13 @@
 
 	<url>http://maven.apache.org</url>
 
-	<repositories>
+<!-- 	<repositories>
 		<repository>
 			<id>local-file</id>
 			<url>file://${basedir}/lib/</url>
 			<layout>default</layout>
 		</repository>
-	</repositories>
+	</repositories> -->
 
 	<dependencies>
 		<dependency>

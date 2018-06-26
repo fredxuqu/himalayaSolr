@@ -55,10 +55,10 @@
 		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/org.apache.solr/solr-solrj -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.apache.solr</groupId>
 			<artifactId>solr-solrj</artifactId>
-		</dependency>
+		</dependency> -->
 	</dependencies>
 
 	<build>

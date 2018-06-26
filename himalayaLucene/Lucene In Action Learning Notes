@@ -24,3 +24,144 @@
 		Query
 		TermQuery
 		TopDocs
+		
+2. 索引过程
+	有一系列被索引文件
+	被索引文件经过语法分析和语言处理形成一系列词 (Term)
+	经过索引创建形成词典和反向索引表
+	通过索引存储将索引写入磁盘
+	
+3. 搜索过程
+	用户输入查询语句
+	对查询语句经过语法分析和语言分析得到一系列词 (Term)
+	经过语法分析得到一个查询树
+	进过索引存储将索引读入内存
+	利用查询树搜索索引，从而得到每个词的文档(Term)的文档链表，对文档链表进行交叉并得到结果文档
+	将搜索到的结果文档对查询的相关性进行排序
+	返回查询结果给用户
+	
+4. Lucene的系统架构
+	主要组件：
+		analysis
+		index
+		search
+		store
+		QueryParser
+		similarities
+		
+	索引过程描述：
+		创建一个IndexWriter用来写索引文件，它有几个参数
+		Direcotry: 就是索引文件所存放的位置
+		Analyzer: 便是用来对文档进行词法分析和语言处理的
+		创建一个Document代表我们要索引的文档
+		将不同的field加入到文档中
+		IndexWriter 将Document写入到索引文件中
+		
+	搜索过程描述：
+		构建一个IndexWriterConfig 对象，同时传入一个Analyzer对象
+		利用Directory和 IndexWriterConfig 构建一个 IndexReader，将磁盘的索引读入到内存
+		使用IndexReader对象创建IndexSearcher准备进行搜索
+		创建QueryParser用于对查询语句进行语法分析
+		QueryParser调用parser进行语法分析，形成查询语法树，放到Query中。
+		IndexSearcher调用search对查询语法树Query进行搜索，得到结果TopScoreDocCollector
+		
+5. 索引文件结构
+	a.	基本概念
+		索引（Index）
+		段（Segment）
+		文档（Document）
+		域（Field）
+		词（Term）
+		
+		segments_5			保存此索引包含了多少个段，每个段包含多少篇文档
+		write.lock			文件锁
+		_2.fdt				保存了此段包含的所有文档，每篇文档包含了多少域，每个域保存了哪些信息。
+		_2.fdx				保存了此段包含的所有文档，每篇文档包含了多少域，每个域保存了哪些信息。
+		_2.fnm				保存了此段包含了多少个域，每个域的名称及索引方式
+		_2.nvd				
+		_2.nvm
+		_2.si
+		_2_Lucene50_0.doc
+		_2_Lucene50_0.pos
+		_2_Lucene50_0.tim
+		_2_Lucene50_0.tip
+		
+	b.	基本类型
+		Byte
+		UInt32
+		UInt64
+		VInt
+		Chars
+		String
+		
+	c.	基本规则
+		lucene为了使得信息的存储占用的空间更小，访问更快，采用了一些压缩规则
+		prefix+suffix 前缀后缀规则
+			Term4inal		
+		差值规则（delta）
+			5 9 11 存储为
+			5  4（9-5） 3（11-9—）
+		或然跟随规则(A+B?)
+			
+		跳跃表规则
+			第1层------------------------------->50-->
+			第0层-------->7--------->37--------->50--------->94-->
+			原链表  ->2->3->7->12->23->37->39->43->50->72->83->94-->
+			
+	d.	索引需要保存哪些信息
+		正向信息
+			Index -> Segments(segments.gen, segments_N) -> Field(fnm, fdx, fdt) -> Term(tvx, tvd, tvf)
+			段的元数据信息(Segments_N)
+				Format
+				Version
+				NameCount
+				SegCount
+					SegName
+					SegSize
+					
+			域(Field)的元数据信息(.fnm)
+				FNMVersion
+				FieldsCount
+				Fields
+					FieldName
+					FieldBits
+				Position & Offset: 位置是基于词的，而偏移量是基于字母或汉字的
+				Indexed域与Stored域的区别
+				
+			词向量(Term Vector)的数据信息
+		
+		反向信息（反向索引）
+			Term Dictionary & Posting List
+			词典  tis
+			词典索引信息  tii			
+			文档号
+			词频 frq			
+			词位置信息  prx
+		
+		其他信息
+			标准化因子
+				为什么需要标准化因子？
+				不同的文档重要性不同
+				不同的域重要性不同
+				Term在文档中出现的绝对次数来决定此词对文档的重要性，有些不合理的地方
+				因此，lucene在计算TermWeight时，都会乘上一个标准化因子来减少上述情况对打分的影响。
+				
+				norm(t,d)= doc.getBoost() * lengthNorm(field) *  f.getBoost()
+				document Boost ： 此值越大，说明此文档越重要
+				Field Boost ： 此值越大，说明此域越重要
+				lengthNorm(field)=(1.0/Math.sqrt(numTerms)) 一个域中包含Term总数越多，文档越长值越小，文档越短值越大
+						
+			删除文档文件	
+			
+	e.	Lucene打分公式说明	
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		

@@ -110,6 +110,35 @@ public class LuceneIndexTest{
 	}
 	
 	@Test
+	public void testDeleteIndexAfterOptimize() throws Exception {
+		
+		IndexWriter writer = getWriter();
+		Assert.assertEquals(ids.length, writer.numDocs());
+		writer.deleteDocuments(new Term("id","1"));
+		writer.commit();
+		Assert.assertTrue(writer.hasDeletions());
+		Assert.assertEquals(ids.length, writer.maxDoc());
+		Assert.assertEquals(1, writer.numDocs());
+		writer.close();
+	}
+	
+	@Test
+	public void testUpdateIndex() throws Exception {
+		
+		IndexWriter writer = getWriter();
+		Document doc = new Document();
+		doc.add(new StringField("id", "1", Field.Store.YES));
+		doc.add(new StringField("country", "USA", Field.Store.YES));
+		doc.add(new TextField("contents", "Facebook will open a Distributed System build on Lucene", Field.Store.YES));
+		doc.add(new StringField("city", "SFO", Field.Store.YES));
+		writer.updateDocument(new Term("id", "1"), doc);
+		writer.commit();
+		Assert.assertEquals(ids.length, writer.numDocs());
+		Assert.assertEquals(3, writer.maxDoc());
+		writer.close();
+	}
+	
+	@Test
 	public void testIndexReader() throws Exception {
 		
 		IndexReader reader = DirectoryReader.open(directory);
@@ -139,7 +168,7 @@ public class LuceneIndexTest{
 	}	
 	
 	@Test
-	public void testQuery() {
+	public void testQueryParser() {
 		
 		IndexReader reader = null;
 		
@@ -166,5 +195,65 @@ public class LuceneIndexTest{
 				e.printStackTrace();
 			}
 		}
-	}	
+	}
+	
+	@Test
+	public void testQueryParser1() {
+		
+		IndexReader reader = null;
+		
+		try {
+			String fieldName = "contents";
+			String keywords = "+Amsterdam +canals";
+			QueryParser queryParser = new QueryParser(fieldName, new WhitespaceAnalyzer());
+			Query query = queryParser.parse(keywords);
+			reader = DirectoryReader.open(directory);
+			IndexSearcher searcher = new IndexSearcher(reader);
+			TopDocs results = searcher.search(query, 10);
+			ScoreDoc[] hitDocs = results.scoreDocs;
+			for (ScoreDoc scoreDoc : hitDocs) {
+				Document document = searcher.doc(scoreDoc.doc);
+				LOGGER.info("Contents " + document.get("contents"));
+			}
+			Assert.assertEquals(0, results.scoreDocs.length);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				reader.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	@Test
+	public void testQueryParser2() {
+		
+		IndexReader reader = null;
+		
+		try {
+			String fieldName = "contents";
+			String keywords = "+Amsterdam +bridges";
+			QueryParser queryParser = new QueryParser(fieldName, new WhitespaceAnalyzer());
+			Query query = queryParser.parse(keywords);
+			reader = DirectoryReader.open(directory);
+			IndexSearcher searcher = new IndexSearcher(reader);
+			TopDocs results = searcher.search(query, 10);
+			ScoreDoc[] hitDocs = results.scoreDocs;
+			for (ScoreDoc scoreDoc : hitDocs) {
+				Document document = searcher.doc(scoreDoc.doc);
+				LOGGER.info("Contents " + document.get("contents"));
+			}
+			Assert.assertEquals(1, results.scoreDocs.length);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				reader.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }

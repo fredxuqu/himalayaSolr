@@ -34,21 +34,19 @@ public class LuceneSearcher {
 			
 			// create search
 			IndexSearcher searcher = new IndexSearcher(reader);
-			ScoreDoc[] hits = null;
 			String queryString = "lucene";
-			Query query = null;
 			
 			// create Analyzer
 			Analyzer analyzer = new StandardAnalyzer();
 	
 			// create QueryParser and parse query
 			QueryParser qp = new QueryParser("body", analyzer);
-			query = qp.parse(queryString);
+			Query query = qp.parse(queryString);
 
 			if (searcher != null) {
 				// search documents
 				TopDocs results = searcher.search(query, 10);
-				hits = results.scoreDocs;
+				ScoreDoc[] hits = results.scoreDocs;
 				Document document = null;
 				for (int i = 0; i < hits.length; i++) {
 					document = searcher.doc(hits[i].doc);

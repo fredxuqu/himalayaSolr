@@ -19,6 +19,7 @@ public class NewsDO implements Serializable {
 	private String content;
 	private String author;
 	private int type;
+	private int grade;
 	private Date publishTime;
 	private Date createTime;
 	private Date updateTime;
@@ -27,13 +28,14 @@ public class NewsDO implements Serializable {
 		super();
 	}
 
-	public NewsDO(int id, String title, String content, String author, int type) {
+	public NewsDO(int id, String title, String content, String author, int type, int grade) {
 		super();
 		this.id = id;
 		this.title = title;
 		this.content = content;
 		this.author = author;
 		this.type = type;
+		this.grade = grade;
 	}
 
 	public int getId() {
@@ -74,6 +76,14 @@ public class NewsDO implements Serializable {
 
 	public void setType(int type) {
 		this.type = type;
+	}
+
+	public int getGrade() {
+		return grade;
+	}
+
+	public void setGrade(int grade) {
+		this.grade = grade;
 	}
 
 	public Date getPublishTime() {
